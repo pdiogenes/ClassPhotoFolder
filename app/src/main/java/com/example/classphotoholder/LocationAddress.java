@@ -33,7 +33,6 @@ public class LocationAddress {
                         }
                         sb.append(address.getThoroughfare()).append("\n");
                         sb.append(address.getPostalCode()).append("\n");
-                        sb.append(address.getCountryName());
                         result = sb.toString();
                     }
                 } catch (IOException e) {
@@ -44,8 +43,7 @@ public class LocationAddress {
                     if (result != null) {
                         message.what = 1;
                         Bundle bundle = new Bundle();
-                        result = "Latitude: " + latitude + " Longitude: " + longitude +
-                                "\n\nAddress:\n" + result;
+                        result = "Endereço atual: " + result;
                         bundle.putString("address", result);
                         message.setData(bundle);
                     } else {

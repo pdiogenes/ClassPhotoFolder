@@ -3,6 +3,8 @@ package com.example.classphotoholder;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
@@ -15,6 +17,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,53 +36,26 @@ public class MainActivity extends AppCompatActivity {
 
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
+
         tvAddress = (TextView) findViewById(R.id.tvAddress);
         appLocationService = new AppLocationService(
                 MainActivity.this);
 
-        btnGPSShowLocation = (Button) findViewById(R.id.btnGPSShowLocation);
-        btnGPSShowLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                Location gpsLocation = appLocationService
-                        .getLocation(LocationManager.GPS_PROVIDER);
-                if (gpsLocation != null) {
-                    double latitude = gpsLocation.getLatitude();
-                    double longitude = gpsLocation.getLongitude();
-                    String result = "Latitude: " + gpsLocation.getLatitude() +
-                            " Longitude: " + gpsLocation.getLongitude();
-                    tvAddress.setText(result);
-                } else {
-                    showSettingsAlert();
-                }
-            }
-        });
+        Location location = appLocationService
+                .getLocation(LocationManager.GPS_PROVIDER);
 
-        btnShowAddress = (Button) findViewById(R.id.btnShowAddress);
-        btnShowAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
 
-                Location location = appLocationService
-                        .getLocation(LocationManager.GPS_PROVIDER);
+        if (location != null) {
+            LocationAddress locationAddress = new LocationAddress();
+            locationAddress.getAddressFromLocation(latitude, longitude,
+                    getApplicationContext(), new GeocoderHandler());
+        } else {
+            showSettingsAlert();
+        }
 
-                //you can hard-code the lat & long if you have issues with getting it
-                //remove the below if-condition and use the following couple of lines
-                //double latitude = 37.422005;
-                //double longitude = -122.084095
 
-                if (location != null) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                    LocationAddress locationAddress = new LocationAddress();
-                    locationAddress.getAddressFromLocation(latitude, longitude,
-                            getApplicationContext(), new GeocoderHandler());
-                } else {
-                    showSettingsAlert();
-                }
-
-            }
-        });
 
     }
 

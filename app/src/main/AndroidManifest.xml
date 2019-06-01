@@ -29,6 +29,9 @@
         </activity>
         <activity android:name=".localizacao" />
         <activity android:name=".horario"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD_2n3GLfV7TPF2ZUoSRbqn0yeTV6Kg48A" />
     </application>
 
 </manifest>

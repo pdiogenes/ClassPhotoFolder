@@ -80,13 +80,13 @@ public class menu_principal extends AppCompatActivity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
 
-        System.out.println(Environment.DIRECTORY_PICTURES);
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
+        String appDirectoryName = "ClassPhotoFolder";
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), appDirectoryName);
+        storageDir.mkdirs();
+        String imgName = imageFileName+".jpg";
+        final File image = new File(storageDir, imgName);
+
 
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();

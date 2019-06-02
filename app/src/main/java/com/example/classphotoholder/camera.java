@@ -9,6 +9,8 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -23,6 +25,8 @@ import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 public class camera extends AppCompatActivity {
     private Camera mCamera;
     private CameraPreview mPreview;
+    public static final int MEDIA_TYPE_IMAGE = 1;
+    public static final int MEDIA_TYPE_VIDEO = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,18 @@ public class camera extends AppCompatActivity {
         mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
         preview.addView(mPreview);
+
+                // Add a listener to the Capture button
+        Button captureButton = (Button) findViewById(R.id.button_capture);
+        captureButton.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // get an image from the camera
+                    mCamera.takePicture(null, null, mPicture);
+                }
+            }
+        );
     }
 
     private boolean checkCameraHardware(Context context) {
@@ -80,8 +96,6 @@ public class camera extends AppCompatActivity {
         }
     };
 
-    public static final int MEDIA_TYPE_IMAGE = 1;
-    public static final int MEDIA_TYPE_VIDEO = 2;
 
 /** Create a file Uri for saving an image or video */
     private static Uri getOutputMediaFileUri(int type){

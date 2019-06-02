@@ -27,6 +27,7 @@ public class menu_principal extends AppCompatActivity {
     private static final String TAG = "address" ;
     private static final int REQUEST_WRITE_STORAGE = 1 ;
     public boolean hasCamera;
+    public boolean hasPermission;
 
 
     @Override
@@ -34,7 +35,7 @@ public class menu_principal extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_principal);
 
-        boolean hasPermission = (ContextCompat.checkSelfPermission(this,
+        hasPermission = (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
 
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA}, 2);
@@ -76,13 +77,28 @@ public class menu_principal extends AppCompatActivity {
         ImageButton imgBtnCamera = (ImageButton) findViewById(R.id.imgBtnCamera);
         imgBtnCamera.setOnClickListener(new View.OnClickListener() {
              public void onClick(View v) {
-                //dispatchTakePictureIntent();
-                Intent intent = new Intent(getApplicationContext(), camera.class);
-                startActivity(intent);
+                 checkPermissionStorage();
+                 /*Intent intent = new Intent(getApplicationContext(), camera.class);
+                 startActivity(intent);*/
             }
         });
     } // fim do onCreate
     //-----------------------------------------------------------------
+
+    public void checkPermissionStorage(){
+        hasPermission = (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+        if (!hasPermission) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_WRITE_STORAGE);
+        }
+        else {
+             Intent intent = new Intent(getApplicationContext(), camera.class);
+             startActivity(intent);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

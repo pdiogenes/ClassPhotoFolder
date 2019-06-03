@@ -1,6 +1,5 @@
-package com.example.classphotoholder;
+package com.example.classphotofolder;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;

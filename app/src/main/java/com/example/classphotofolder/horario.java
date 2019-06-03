@@ -1,4 +1,4 @@
-package com.example.classphotoholder;
+package com.example.classphotofolder;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

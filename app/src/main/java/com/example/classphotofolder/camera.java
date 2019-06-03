@@ -1,4 +1,4 @@
-package com.example.classphotoholder;
+package com.example.classphotofolder;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -19,8 +18,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
-
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 
 public class camera extends AppCompatActivity {
     private Camera mCamera;

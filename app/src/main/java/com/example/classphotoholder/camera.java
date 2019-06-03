@@ -49,6 +49,7 @@ public class camera extends AppCompatActivity {
                 public void onClick(View v) {
                     // get an image from the camera
                     mCamera.takePicture(null, null, mPicture);
+                    photoTaken();
                 }
             }
         );
@@ -60,6 +61,11 @@ public class camera extends AppCompatActivity {
         } else {
             return false;
         }
+    }
+
+    void photoTaken(){
+        Toast.makeText(this, "Foto tirada. Voltando para o menu.", Toast.LENGTH_SHORT).show();
+        this.finish();
     }
 
     public static Camera getCameraInstance(){

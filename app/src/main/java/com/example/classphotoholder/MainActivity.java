@@ -4,14 +4,17 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,14 +24,19 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+
 
 public class MainActivity extends AppCompatActivity {
 
-
+    private static final int REQUEST_WRITE_STORAGE = 1;
+    private static final int REQUEST_CAMERA = 2;
+    private static final int REQUEST_FINE_LOCATION = 3;
     TextView txtDist;
     AppLocationService appLocationService;
     SharedPreferences sp;
     boolean localEstudo = false;
+    boolean hasPermission;
 
 
     @Override
@@ -36,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 3);
 
         txtDist = (TextView) findViewById(R.id.textCompDist);
 
@@ -65,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton imgBtnCamera = (ImageButton) findViewById(R.id.imgBtnCamera);
         imgBtnCamera.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                dispatchTakePictureIntent();
+                checkPermissionStorage();
             }
         });
 
@@ -99,9 +107,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void getLocation(){
-
-        ;
+    void checkPermissionStorage(){
+        hasPermission = (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+        if (!hasPermission) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_WRITE_STORAGE);
+        }
+        else {
+            prepCreateFolder();
+        }
     }
 
     private double distance(double lat1, double lng1, double lat2, double lng2) {
@@ -124,50 +140,52 @@ public class MainActivity extends AppCompatActivity {
         return dist;
     }
 
-    public void showSettingsAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                MainActivity.this);
-        alertDialog.setTitle("SETTINGS");
-        alertDialog.setMessage("Enable Location Provider! Go to settings menu?");
-        alertDialog.setPositiveButton("Settings",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(
-                                Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        MainActivity.this.startActivity(intent);
-                    }
-                });
-        alertDialog.setNegativeButton("Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        alertDialog.show();
+    void prepCreateFolder(){
+        hasPermission = (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED);
+        if (!hasPermission) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CAMERA);
+        }
+        else {
+            createFolder();
+        }
     }
 
-    /*private class GeocoderHandler extends Handler {
-        @Override
-        public void handleMessage(Message message) {
-            String locationAddress;
-            switch (message.what) {
-                case 1:
-                    Bundle bundle = message.getData();
-                    locationAddress = bundle.getString("address");
-                    break;
-                default:
-                    locationAddress = null;
-            }
-            txt.setText(locationAddress);
+    public void createFolder() {
+        final File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "ClassPhotoFolder");
+        if (!f.exists()) {
+            f.mkdir();
         }
-    }*/
+        else{
+            Intent intent = new Intent(getApplicationContext(), camera.class);
+            startActivity(intent);
+        }
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    }
 
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CAMERA: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    createFolder();
+                } else {
+                }
+                return;
+            }
+
+            case REQUEST_WRITE_STORAGE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    prepCreateFolder();
+                } else {
+                }
+                return;
+            }
         }
     }
 

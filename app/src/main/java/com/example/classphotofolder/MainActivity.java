@@ -1,40 +1,51 @@
 package com.example.classphotofolder;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationListener {
 
     private static final int REQUEST_WRITE_STORAGE = 1;
     private static final int REQUEST_CAMERA = 2;
     private static final int REQUEST_FINE_LOCATION = 3;
-    private static final int REQUEST_CALENDAR_WRITE = 4;
-    private static final int REQUEST_CALENDAR_READ = 5;
     TextView txtDist;
     AppLocationService appLocationService;
+    LocationManager locationManager;
     SharedPreferences sp;
     boolean localEstudo = false;
     boolean hasPermissionCamera;
     boolean hasPermissionGPS;
     boolean hasPermissionStorage;
     boolean hasPermissionCalendar;
+    Criteria criteria;
+    Location currentLocation;
+    String bestProvider;
 
 
     @Override
@@ -62,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         final Button btnHorario = findViewById(R.id.btnHorario);
         btnHorario.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                getPermissionCalendar();
+                openHorarios();
             }
         });
 
@@ -89,17 +100,63 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public static boolean isLocationEnabled(Context context)
+    {
+        int locationMode = 0;
+        String locationProviders;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        {
+            try
+            {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+            }
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+        }
+        else
+        {
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !TextUtils.isEmpty(locationProviders);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    protected void getLocation() {
+        if (isLocationEnabled(MainActivity.this)) {
+            locationManager = (LocationManager)  this.getSystemService(Context.LOCATION_SERVICE);
+            criteria = new Criteria();
+            bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true)).toString();
+
+            //You can still do this if you like, you might get lucky:
+            currentLocation = locationManager.getLastKnownLocation(bestProvider);
+            if (currentLocation != null) {
+                Log.e("TAG", "GPS is on");
+                double latitude = currentLocation.getLatitude();
+                double longitude = currentLocation.getLongitude();
+                Toast.makeText(MainActivity.this, "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
+            }
+            else{
+                //This is what you need:
+                locationManager.requestLocationUpdates(bestProvider, 1000, 0, this);
+            }
+        }
+        else
+        {
+            getGPSPermission();
+        }
+    }
+
     public void verificarDistancia(){
         if(sp.contains("LOCATION_LAT") && sp.contains("LOCATION_LON")){
-            Location location = appLocationService
-                    .getLocation(LocationManager.GPS_PROVIDER);
-            double latitudeLocal = location.getLatitude();
-            double longitudeLocal = location.getLongitude();
+            getLocation();
+            double latitudeLocal = currentLocation.getLatitude();
+            double longitudeLocal = currentLocation.getLongitude();
 
             Double lat = Double.parseDouble(sp.getString("LOCATION_LAT", null));
             Double lon = Double.parseDouble(sp.getString("LOCATION_LON", null));
 
-            if(distance(latitudeLocal, longitudeLocal, lat, lon) < 0.1){
+            if(distance(latitudeLocal, longitudeLocal, lat, lon) < 0.6){
                 txtDist.setVisibility(View.VISIBLE);
                 txtDist.setText("Você está no local de estudo registrado!");
                 localEstudo = true;
@@ -114,34 +171,6 @@ public class MainActivity extends AppCompatActivity {
             txtDist.setVisibility(View.VISIBLE);
             txtDist.setText("Não há local de estudo registrado. Registrar no menu de localizações abaixo.");
             localEstudo = false;
-        }
-    }
-
-
-
-    void getPermissionWriteCalendar(){
-        hasPermissionCalendar = (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED);
-        if (!hasPermissionCalendar) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_CALENDAR},
-                    REQUEST_CALENDAR_WRITE);
-        }
-        else {
-            openHorarios();
-        }
-    }
-
-    void getPermissionCalendar(){
-        hasPermissionCalendar = (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED);
-        if (!hasPermissionCalendar) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_CALENDAR},
-                    REQUEST_CALENDAR_READ);
-        }
-        else {
-            getPermissionWriteCalendar();
         }
     }
 
@@ -160,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
 
     private double distance(double lat1, double lng1, double lat2, double lng2) {
 
-        double earthRadius = 3958.75; // in miles, change to 6371 for kilometers
+        double earthRadius =  6371; // in miles, change to 3958.75 for miles
 
         double dLat = Math.toRadians(lat2-lat1);
         double dLng = Math.toRadians(lng2-lng1);
@@ -174,6 +203,8 @@ public class MainActivity extends AppCompatActivity {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
         double dist = earthRadius * c;
+
+        System.out.println(dist);
 
         return dist;
     }
@@ -230,24 +261,6 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            case REQUEST_CALENDAR_READ: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getPermissionWriteCalendar();
-                } else {
-                }
-                return;
-            }
-
-            case REQUEST_CALENDAR_WRITE: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    openHorarios();
-                } else {
-                }
-                return;
-            }
-
             case REQUEST_FINE_LOCATION: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -263,5 +276,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         verificarDistancia();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 }

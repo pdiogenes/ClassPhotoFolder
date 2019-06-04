@@ -115,6 +115,7 @@ public class localizacao extends AppCompatActivity implements OnMapReadyCallback
             Address location=address.get(0);
             location.getLatitude();
             location.getLongitude();
+            Toast.makeText(this, "latitude:" + location.getLatitude() + " longitude:" + location.getLongitude(), Toast.LENGTH_SHORT).show();
 
             p1 = new LatLng((location.getLatitude()),
                     (location.getLongitude()));

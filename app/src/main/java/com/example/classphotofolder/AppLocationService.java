@@ -1,5 +1,6 @@
 package com.example.classphotofolder;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,7 @@ public class AppLocationService extends Service implements LocationListener {
                 .getSystemService(LOCATION_SERVICE);
     }
 
+    @SuppressLint("MissingPermission")
     public Location getLocation(String provider) {
         if (locationManager.isProviderEnabled(provider)) {
             locationManager.requestLocationUpdates(provider,
@@ -30,6 +32,9 @@ public class AppLocationService extends Service implements LocationListener {
                 location = locationManager.getLastKnownLocation(provider);
                 return location;
             }
+        }
+        else{
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE );
         }
         return null;
     }

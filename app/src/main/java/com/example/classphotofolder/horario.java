@@ -27,13 +27,13 @@ public class horario extends AppCompatActivity  {
 
         horario = new Controller_Horario(getBaseContext());
         imgBtnInserir = (ImageButton) findViewById(R.id.imgBtnInserir);
-        btnAlterar = (ImageButton) findViewById(R.id.btnAlterar);
-        btnExcluir = (ImageButton) findViewById(R.id.btnApagar);
-        editProduto = (EditText) findViewById(R.id.editProduto);
-        editQuantidade = (EditText) findViewById(R.id.editQuantidade);
-        editValor = (EditText) findViewById(R.id.editValor);
-        produtos = (Spinner) findViewById(R.id.spinner);
-        preencheAdaptador();
+        imgBtnAlterar = (ImageButton) findViewById(R.id.imgBtnAlterar);
+        imgBtnExcluir = (ImageButton) findViewById(R.id.imgBtnExcluir);
+        editDisciplina = (EditText) findViewById(R.id.editDisciplina);
+        editHorarioInicio = (EditText) findViewById(R.id.editHorarioInicio);
+        editHorarioFim = (EditText) findViewById(R.id.editHorarioFim);
+        horarios = (Spinner) findViewById(R.id.spnHorarios);
+        //preencheAdaptador();
 
         ImageButton imgBtnInserir = (ImageButton) findViewById(R.id.imgBtnInserir);
         imgBtnInserir.setOnClickListener(new View.OnClickListener() {

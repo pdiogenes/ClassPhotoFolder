@@ -29,9 +29,9 @@ public class horario extends AppCompatActivity  {
         imgBtnInserir = (ImageButton) findViewById(R.id.imgBtnInserir);
         imgBtnAlterar = (ImageButton) findViewById(R.id.imgBtnAlterar);
         imgBtnExcluir = (ImageButton) findViewById(R.id.imgBtnExcluir);
-        editDisciplina = (EditText) findViewById(R.id.editDisciplina);
-        editHorarioInicio = (EditText) findViewById(R.id.editHorarioInicio);
-        editHorarioFim = (EditText) findViewById(R.id.editHorarioFim);
+        //editDisciplina = (EditText) findViewById(R.id.editDisciplina);
+        //editHorarioInicio = (EditText) findViewById(R.id.editHorarioInicio);
+        //editHorarioFim = (EditText) findViewById(R.id.editHorarioFim);
         horarios = (Spinner) findViewById(R.id.spnHorarios);
         //preencheAdaptador();
 

@@ -10,20 +10,30 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class horario extends AppCompatActivity implements View.OnClickListener {
+public class horario extends AppCompatActivity  {
 
-    EditText editDisciplina, editHor, editQuantidade;
+    EditText editDisciplina, editHorarioInicio, editHorarioFim;
     Controller_Horario horario;
     Cursor cursor;
     String[] nomeCampos;
     int[] idViews;
-    Spinner produtos;
-    ImageButton btnCadastrar, btnAlterar, btnExcluir;
+    Spinner horarios;
+    ImageButton imgBtnInserir, imgBtnAlterar, imgBtnExcluir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_horario);
+
+        horario = new Controller_Horario(getBaseContext());
+        imgBtnInserir = (ImageButton) findViewById(R.id.imgBtnInserir);
+        btnAlterar = (ImageButton) findViewById(R.id.btnAlterar);
+        btnExcluir = (ImageButton) findViewById(R.id.btnApagar);
+        editProduto = (EditText) findViewById(R.id.editProduto);
+        editQuantidade = (EditText) findViewById(R.id.editQuantidade);
+        editValor = (EditText) findViewById(R.id.editValor);
+        produtos = (Spinner) findViewById(R.id.spinner);
+        preencheAdaptador();
 
         ImageButton imgBtnInserir = (ImageButton) findViewById(R.id.imgBtnInserir);
         imgBtnInserir.setOnClickListener(new View.OnClickListener() {

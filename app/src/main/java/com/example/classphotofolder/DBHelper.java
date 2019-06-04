@@ -1,5 +1,9 @@
 package com.example.classphotofolder;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
 public class DBHelper extends SQLiteOpenHelper {
     protected static final String NOME_BANCO = "horario.db";
     protected static final int VERSAO_BANCO = 1;

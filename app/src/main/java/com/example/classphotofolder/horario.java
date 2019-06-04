@@ -2,6 +2,7 @@ package com.example.classphotofolder;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 public class horario extends AppCompatActivity implements View.OnClickListener {

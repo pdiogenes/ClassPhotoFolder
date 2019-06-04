@@ -1,12 +1,10 @@
 package com.example.classphotofolder;
 
-import java.time.LocalDateTime;
-
 public class Model_Horario {
     private int idAula;
     private String nomeDisciplina;
-    private LocalDateTime horaInicio;
-    private LocalDateTime horaFim;
+    private Long horaInicio;
+    private Long horaFim;
     private String diaSemana;
 
     public int getIdAula() {
@@ -25,19 +23,19 @@ public class Model_Horario {
         this.nomeDisciplina = nomeDisciplina;
     }
 
-    public LocalDateTime getHoraInicio() {
+    public Long getHoraInicio() {
         return horaInicio;
     }
 
-    public void setHoraInicio(LocalDateTime horaInicio) {
+    public void setHoraInicio(Long horaInicio) {
         this.horaInicio = horaInicio;
     }
 
-    public LocalDateTime getHoraFim() {
+    public Long getHoraFim() {
         return horaFim;
     }
 
-    public void setHoraFim(LocalDateTime horaFim) {
+    public void setHoraFim(Long horaFim) {
         this.horaFim = horaFim;
     }
 

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Controller_Horario {
     private SQLiteDatabase db;
@@ -15,7 +16,7 @@ public class Controller_Horario {
     }
 
 
-    public String insereProduto(String nomeDisciplina, LocalDateTime horaInicio, LocalDateTime horaFim, String diaSemana){
+    public String insereProduto(String nomeDisciplina, Long horaInicio, Long horaFim, String diaSemana){
         ContentValues valores;
         long resultado;
         db = banco.getWritableDatabase();
@@ -30,7 +31,7 @@ public class Controller_Horario {
         else return "Registro Inserido com sucesso";
     }
 
-    public void alteraRegistro(int id , String nomeDisciplina, LocalDateTime horaInicio, LocalDateTime horaFim, String diaSemana){
+    public void alteraRegistro(int id , String nomeDisciplina, Long horaInicio, Long horaFim, String diaSemana){
         ContentValues valores; String where;
         db = banco.getWritableDatabase();
         where = DBHelper.COLUNA_AULA_ID + "=" + id;

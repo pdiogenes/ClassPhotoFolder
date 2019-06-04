@@ -25,11 +25,16 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_WRITE_STORAGE = 1;
     private static final int REQUEST_CAMERA = 2;
     private static final int REQUEST_FINE_LOCATION = 3;
+    private static final int REQUEST_CALENDAR_WRITE = 4;
+    private static final int REQUEST_CALENDAR_READ = 5;
     TextView txtDist;
     AppLocationService appLocationService;
     SharedPreferences sp;
     boolean localEstudo = false;
-    boolean hasPermission;
+    boolean hasPermissionCamera;
+    boolean hasPermissionGPS;
+    boolean hasPermissionStorage;
+    boolean hasPermissionCalendar;
 
 
     @Override
@@ -37,11 +42,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 3);
+        sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         txtDist = (TextView) findViewById(R.id.textCompDist);
-
-        sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        txtDist.setText("");
+        getGPSPermission();
 
         appLocationService = new AppLocationService(
                 MainActivity.this);
@@ -57,8 +62,7 @@ public class MainActivity extends AppCompatActivity {
         final Button btnHorario = findViewById(R.id.btnHorario);
         btnHorario.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), horario.class);
-                startActivity(intent);
+                getPermissionCalendar();
             }
         });
 
@@ -70,6 +74,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    void getGPSPermission(){
+        hasPermissionGPS = (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
+        if (!hasPermissionGPS) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_FINE_LOCATION);
+        }
+        else {
+            verificarDistancia();
+        }
     }
 
     public void verificarDistancia(){
@@ -100,10 +117,38 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
+    void getPermissionWriteCalendar(){
+        hasPermissionCalendar = (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED);
+        if (!hasPermissionCalendar) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_CALENDAR},
+                    REQUEST_CALENDAR_WRITE);
+        }
+        else {
+            openHorarios();
+        }
+    }
+
+    void getPermissionCalendar(){
+        hasPermissionCalendar = (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED);
+        if (!hasPermissionCalendar) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_CALENDAR},
+                    REQUEST_CALENDAR_READ);
+        }
+        else {
+            getPermissionWriteCalendar();
+        }
+    }
+
     void checkPermissionStorage(){
-        hasPermission = (ContextCompat.checkSelfPermission(this,
+        hasPermissionStorage = (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
-        if (!hasPermission) {
+        if (!hasPermissionStorage) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     REQUEST_WRITE_STORAGE);
@@ -134,9 +179,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void prepCreateFolder(){
-        hasPermission = (ContextCompat.checkSelfPermission(this,
+        hasPermissionCamera = (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED);
-        if (!hasPermission) {
+        if (!hasPermissionCamera) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.CAMERA},
                     REQUEST_CAMERA);
@@ -158,6 +203,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    void openHorarios(){
+        Intent intent = new Intent(getApplicationContext(), horario.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
@@ -175,6 +225,33 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     prepCreateFolder();
+                } else {
+                }
+                return;
+            }
+
+            case REQUEST_CALENDAR_READ: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getPermissionWriteCalendar();
+                } else {
+                }
+                return;
+            }
+
+            case REQUEST_CALENDAR_WRITE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openHorarios();
+                } else {
+                }
+                return;
+            }
+
+            case REQUEST_FINE_LOCATION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    verificarDistancia();
                 } else {
                 }
                 return;

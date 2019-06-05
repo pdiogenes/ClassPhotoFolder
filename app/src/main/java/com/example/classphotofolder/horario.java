@@ -12,28 +12,31 @@ import android.widget.TextView;
 
 public class horario extends AppCompatActivity  {
 
-    EditText editDisciplina, editHorarioInicio, editHorarioFim;
     Controller_Horario horario;
     Cursor cursor;
     String[] nomeCampos;
     int[] idViews;
     Spinner horarios;
-    ImageButton imgBtnInserir, imgBtnAlterar, imgBtnExcluir;
+    ImageButton imgBtnInserir, imgBtnExcluir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_horario);
 
+        cursor = horario.preencheSpinner(); 
+        nomeCampos = new String[]{DBHelper.COLUNA_NOME_DISCIPLINA, DBHelper.COLUNA_DIA_SEMANA, DBHelper.COLUNA_HORA_INICIO, DBHelper.COLUNA_HORA_FIM};
+        idViews = new int[]{R.id.txtNomeDisciplina, R.id.txtDiaSemana, R.id.txtHoraInicio, R.id.txtHoraFim};
+        SimpleCursorAdapter adaptador = new SimpleCursorAdapter(getBaseContext(), R.layout.spinner_horarios, cursor, nomeCampos, idViews, 0);
+        produtos.setAdapter(adaptador);
+
+
         horario = new Controller_Horario(getBaseContext());
         imgBtnInserir = (ImageButton) findViewById(R.id.imgBtnInserir);
-        imgBtnAlterar = (ImageButton) findViewById(R.id.imgBtnAlterar);
         imgBtnExcluir = (ImageButton) findViewById(R.id.imgBtnExcluir);
-        //editDisciplina = (EditText) findViewById(R.id.editDisciplina);
-        //editHorarioInicio = (EditText) findViewById(R.id.editHorarioInicio);
-        //editHorarioFim = (EditText) findViewById(R.id.editHorarioFim);
         horarios = (Spinner) findViewById(R.id.spnHorarios);
-        //preencheAdaptador();
+        horario.preencheSpinner();
+
 
         ImageButton imgBtnInserir = (ImageButton) findViewById(R.id.imgBtnInserir);
         imgBtnInserir.setOnClickListener(new View.OnClickListener() {

@@ -9,15 +9,10 @@
     <TextView
         android:id="@+id/txtvHorario"
         android:layout_width="128dp"
-        android:layout_height="91dp"
-        android:layout_marginStart="128dp"
-        android:layout_marginEnd="135dp"
+        android:layout_height="60dp"
         android:text="Horários"
         android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:layout_editor_absoluteX="128dp" />
 
     <Spinner
         android:id="@+id/spnHorarios"
@@ -34,41 +29,37 @@
         android:id="@+id/imgBtnInserir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="63dp"
-        app:layout_constraintBottom_toTopOf="@+id/spnHorarios"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="96dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <ImageButton
         android:id="@+id/imgBtnAlterar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="52dp"
+        android:layout_marginBottom="76dp"
         app:layout_constraintBottom_toTopOf="@+id/spnHorarios"
+        app:layout_constraintEnd_toStartOf="@+id/imgBtnExcluir"
         app:layout_constraintStart_toEndOf="@+id/imgBtnInserir"
         app:layout_constraintTop_toBottomOf="@+id/txtvHorario"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="0.608"
         app:srcCompat="@android:drawable/ic_menu_edit" />
 
     <ImageButton
         android:id="@+id/imgBtnExcluir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="60dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginTop="98dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginBottom="65dp"
         app:layout_constraintBottom_toTopOf="@+id/spnHorarios"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imgBtnAlterar"
-        app:layout_constraintTop_toBottomOf="@+id/txtvHorario"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_delete" />
 
 </android.support.constraint.ConstraintLayout>

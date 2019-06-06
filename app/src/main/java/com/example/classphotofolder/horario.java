@@ -83,14 +83,14 @@ public class horario extends AppCompatActivity  {
             }
         });
 
+        
+        horario = new Controller_Horario(this);
         cursor = horario.preencheSpinner();
         nomeCampos = new String[]{DBHelper.COLUNA_NOME_DISCIPLINA, DBHelper.COLUNA_DIA_SEMANA, DBHelper.COLUNA_HORA_INICIO, DBHelper.COLUNA_HORA_FIM};
         idViews = new int[]{R.id.txtNomeDisciplina, R.id.txtDiaSemana, R.id.txtHoraInicio, R.id.txtHoraFim};
-        SimpleCursorAdapter adaptador = new SimpleCursorAdapter(getBaseContext(), R.layout.spinner_horarios, cursor, nomeCampos, idViews, 0);
+        SimpleCursorAdapter adaptador = new SimpleCursorAdapter(this, R.layout.spinner_horarios, cursor, nomeCampos, idViews, 0);
         horarios.setAdapter(adaptador);
 
-
-        horario = new Controller_Horario(getBaseContext());
         imgBtnInserir = (ImageButton) findViewById(R.id.imgBtnInserir);
         imgBtnExcluir = (ImageButton) findViewById(R.id.imgBtnExcluir);
         horarios = (Spinner) findViewById(R.id.spnHorarios);
@@ -100,14 +100,14 @@ public class horario extends AppCompatActivity  {
         imgBtnInserir = (ImageButton) findViewById(R.id.imgBtnInserir);
         imgBtnInserir.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                inserirHorario();
+                //inserirHorario();
             }
         });
 
         imgBtnExcluir = (ImageButton) findViewById(R.id.imgBtnExcluir);
         imgBtnExcluir.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                excluirHorario();
+                //excluirHorario();
             }
         });
     }
@@ -128,24 +128,28 @@ public class horario extends AppCompatActivity  {
     }
 
     void inserirHorario(Controller_Horario horario){
+        /*
         String resultado;
-        if (!txtNomeDisc.getText().toString().isEmpty() && !txtHoraIni.getText().toString().isEmpty()
-            && !txtHoraFim.getText().toString().isEmpty() && !txtDiaSem.getText().toString().isEmpty()) {
+        if (!editNomeDisc.getText().toString().isEmpty() && !editHoraIni.getText().toString().isEmpty()
+            && !editHoraFim.getText().toString().isEmpty()) {
             String nomeDisc = editNomeDisc.getText().toString();
-            String diaSemana = editDiaSem.getText().toString();
+            //String diaSemana = editDiaSem.getText().toString();
             //TODO horaInicio
             //TODO horaFim
-            resultado = horario.insereProduto(nomeDisc, diaSemana, horaInicio, horaFim);
+            //TODO spnDiaSemana
+            resultado = horario.insereHorario(nomeDisc, diaSemana, horaInicio, horaFim);
             Toast.makeText(this, nomeDisc + " no dia " + diaSemana + " inserida com sucesso", Toast.LENGTH_SHORT).show();
-            editNomeDisc.setText(""); editDiaSem.setText(""); editHoraIni.setText(""); editHoraFim.setText("");
-            preencheAdaptador();
+            editNomeDisc.setText(""); editHoraIni.setText(""); editHoraFim.setText("");
+            //preencheAdaptador();
         } else Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show();
+
+        */
     }
 
     void excluirHorario(Controller_Horario horario , Spinner horarios){
         cursor = (Cursor) horarios.getSelectedItem();
         horario.apagaRegistro(cursor.getInt(0));
-        preencheAdaptador();
+        //preencheAdaptador();
     }
 
 }

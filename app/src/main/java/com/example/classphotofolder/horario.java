@@ -131,11 +131,21 @@ public class horario extends AppCompatActivity  {
         timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
+                String minutos = "", horas = "";
+
+                if(minutes < 10){
+                    minutos = "0"+minutes;
+                } else minutos = ""+minutes;
+
+                if(hourOfDay < 10){
+                    horas = "0"+hourOfDay;
+                } else horas = ""+hourOfDay;
+
                 if(i == horaInicio){
-                    editHoraIni.setText(hourOfDay + ":" + minutes);
+                    editHoraIni.setText(horas + ":" + minutos);
                 }
                 else if(i == horaFim){
-                    editHoraFim.setText(hourOfDay + ":" + minutes);
+                    editHoraFim.setText(horas + ":" + minutos);
                 }
             }
         }, 0, 0, false);

@@ -89,7 +89,7 @@ public class horario extends AppCompatActivity  {
         nomeCampos = new String[]{DBHelper.COLUNA_NOME_DISCIPLINA, DBHelper.COLUNA_DIA_SEMANA, DBHelper.COLUNA_HORA_INICIO, DBHelper.COLUNA_HORA_FIM};
         idViews = new int[]{R.id.txtNomeDisciplina, R.id.txtDiaSemana, R.id.txtHoraInicio, R.id.txtHoraFim};
         SimpleCursorAdapter adaptador = new SimpleCursorAdapter(this, R.layout.spinner_horarios, cursor, nomeCampos, idViews, 0);
-        horarios.setAdapter(adaptador);
+        horarios.setAdapter(adaptador)
 
         imgBtnInserir = (ImageButton) findViewById(R.id.imgBtnInserir);
         imgBtnExcluir = (ImageButton) findViewById(R.id.imgBtnExcluir);

@@ -88,7 +88,7 @@ public class horario extends AppCompatActivity  {
             }
         });
 
-        
+
         horario = new Controller_Horario(this);
         cursor = horario.preencheSpinner();
         nomeCampos = new String[]{DBHelper.COLUNA_NOME_DISCIPLINA, DBHelper.COLUNA_DIA_SEMANA, DBHelper.COLUNA_HORA_INICIO, DBHelper.COLUNA_HORA_FIM};
@@ -129,17 +129,17 @@ public class horario extends AppCompatActivity  {
         timePickerDialog.show();
     }
 
-    void inserirHorario(Controller_Horario horario){
+    void inserirHorario(){
         /*
         String resultado;
         if (!editNomeDisc.getText().toString().isEmpty() && !editHoraIni.getText().toString().isEmpty()
             && !editHoraFim.getText().toString().isEmpty()) {
             String nomeDisc = editNomeDisc.getText().toString();
-            //String diaSemana = editDiaSem.getText().toString();
+            String diaSemana = this.dias.getSelectedItem().toString();
             //TODO horaInicio
             //TODO horaFim
             //TODO spnDiaSemana
-            resultado = horario.insereHorario(nomeDisc, diaSemana, horaInicio, horaFim);
+            resultado = this.horario.insereHorario(nomeDisc, horaInicio, horaFim , diaSemana);
             Toast.makeText(this, nomeDisc + " no dia " + diaSemana + " inserida com sucesso", Toast.LENGTH_SHORT).show();
             editNomeDisc.setText(""); editHoraIni.setText(""); editHoraFim.setText("");
             //preencheAdaptador();

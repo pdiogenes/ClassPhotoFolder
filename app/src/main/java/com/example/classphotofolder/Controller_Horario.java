@@ -59,7 +59,7 @@ public class Controller_Horario {
         cursor = db.query(banco.NOME_TABELA_AULAS, campos, null, null, null, null,
         banco.COLUNA_NOME_DISCIPLINA+" ASC", null);
         if(cursor!=null){
-        cursor.moveToFirst();
+            cursor.moveToFirst();
         }
         db.close();
         return cursor;

@@ -172,11 +172,13 @@ public class horario extends AppCompatActivity  {
             boolean success = true;
             if (!folder.exists()) {
                 success = folder.mkdirs();
+                Toast.makeText(this, "Pasta criada.", Toast.LENGTH_SHORT).show();
             }
-            if (success) {
-                // Do something on success
-            } else {
-                // Do something else on failure
+            else{
+                Toast.makeText(this, "Pasta da matéria " + nomeDisc +" já existe.", Toast.LENGTH_SHORT).show();
+            }
+            if(!success){
+              Toast.makeText(this, "Erro ao criar a pasta.", Toast.LENGTH_SHORT).show();
             }
         } else Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show();
 

@@ -16,7 +16,7 @@ public class Controller_Horario {
     }
 
 
-    public String insereHorario(String nomeDisciplina, Long horaInicio, Long horaFim, String diaSemana){
+    public String insereHorario(String nomeDisciplina, String horaInicio, String horaFim, String diaSemana){
         ContentValues valores;
         long resultado;
         db = banco.getWritableDatabase();

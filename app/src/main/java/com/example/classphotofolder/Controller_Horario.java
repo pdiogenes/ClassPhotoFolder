@@ -31,7 +31,7 @@ public class Controller_Horario {
         else return "Registro Inserido com sucesso";
     }
 
-    public void alteraRegistro(int id , String nomeDisciplina, Long horaInicio, Long horaFim, String diaSemana){
+    public void alteraRegistro(int id , String nomeDisciplina, String horaInicio, String horaFim, String diaSemana){
         ContentValues valores; String where;
         db = banco.getWritableDatabase();
         where = DBHelper.COLUNA_AULA_ID + "=" + id;

@@ -89,13 +89,7 @@ public class horario extends AppCompatActivity  {
         });
 
 
-        horario = new Controller_Horario(this);
-        cursor = horario.preencheSpinner();
-        nomeCampos = new String[]{DBHelper.COLUNA_NOME_DISCIPLINA, DBHelper.COLUNA_DIA_SEMANA, DBHelper.COLUNA_HORA_INICIO, DBHelper.COLUNA_HORA_FIM};
-        idViews = new int[]{R.id.txtNomeDisciplina, R.id.txtDiaSemana, R.id.txtHoraInicio, R.id.txtHoraFim};
-        SimpleCursorAdapter adaptador = new SimpleCursorAdapter(this, R.layout.spinner_horarios, cursor, nomeCampos, idViews, 0);
-        horarios.setAdapter(adaptador);
-
+        preencheAdaptador();
         horario.preencheSpinner();
 
 
@@ -112,6 +106,27 @@ public class horario extends AppCompatActivity  {
                 //excluirHorario();
             }
         });
+
+        produtos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id){
+                cursor = (Cursor) horario.getSelectedItem();
+                editNomeDisc.setText(cursor.getString
+                (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_NOME_DISCIPLINA)));
+                editHoraFim.setText(cursor.getString
+                (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_HORA_FIM)));
+                editHoraIni.setText(cursor.getString
+                (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_HORA_INICIO)));
+                String compareValue = (cursor.getString
+                (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_DIA_SEMANA)));
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.select_state, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                mSpinner.setAdapter(adapter);
+                if (compareValue != null) {
+                    int spinnerPosition = adapter.getPosition(compareValue);
+                    mSpinner.setSelection(spinnerPosition);
+                }
+            }
     }
 
     void throwTimeDialog(final int i){
@@ -130,28 +145,37 @@ public class horario extends AppCompatActivity  {
     }
 
     void inserirHorario(){
-        /*
+
         String resultado;
         if (!editNomeDisc.getText().toString().isEmpty() && !editHoraIni.getText().toString().isEmpty()
             && !editHoraFim.getText().toString().isEmpty()) {
             String nomeDisc = editNomeDisc.getText().toString();
             String diaSemana = this.dias.getSelectedItem().toString();
-            //TODO horaInicio
-            //TODO horaFim
-            //TODO spnDiaSemana
+            String horaInicio = this.editHoraIni.getText();
+            String horaFim = this.editHoraFim.getText();
             resultado = this.horario.insereHorario(nomeDisc, horaInicio, horaFim , diaSemana);
             Toast.makeText(this, nomeDisc + " no dia " + diaSemana + " inserida com sucesso", Toast.LENGTH_SHORT).show();
             editNomeDisc.setText(""); editHoraIni.setText(""); editHoraFim.setText("");
-            //preencheAdaptador();
+            preencheAdaptador();
         } else Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show();
 
-        */
+
     }
 
     void excluirHorario(Controller_Horario horario , Spinner horarios){
         cursor = (Cursor) horarios.getSelectedItem();
         horario.apagaRegistro(cursor.getInt(0));
-        //preencheAdaptador();
+        preencheAdaptador();
     }
+
+    public void preencheAdaptador() {
+        this.horario = new Controller_Horario(this);
+        this.cursor = horario.preencheSpinner();
+        this.nomeCampos = new String[]{DBHelper.COLUNA_NOME_DISCIPLINA, DBHelper.COLUNA_DIA_SEMANA, DBHelper.COLUNA_HORA_INICIO, DBHelper.COLUNA_HORA_FIM};
+        this.idViews = new int[]{R.id.txtNomeDisciplina, R.id.txtDiaSemana, R.id.txtHoraInicio, R.id.txtHoraFim};
+        SimpleCursorAdapter adaptador = new SimpleCursorAdapter(this, R.layout.spinner_horarios, this.cursor, this.nomeCampos, this.idViews, 0);
+        horarios.setAdapter(adaptador);
+    }
+
 
 }

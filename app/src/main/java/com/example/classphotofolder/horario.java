@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -53,7 +54,7 @@ public class horario extends AppCompatActivity  {
         editHoraIni.setHint("Insira a hora de inicio");
         editHoraFim.setHint("Insira a hora de fim");
 
-                // (2) create a simple static list of strings
+        // (2) create a simple static list of strings
         List<String> spinnerArray = new ArrayList<>();
         spinnerArray.add("Segunda");
         spinnerArray.add("Terça");
@@ -64,9 +65,9 @@ public class horario extends AppCompatActivity  {
         spinnerArray.add("Domingo");
         // (3) create an adapter from the list
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-            getApplicationContext(),
-            android.R.layout.simple_spinner_item,
-            spinnerArray
+                getApplicationContext(),
+                android.R.layout.simple_spinner_item,
+                spinnerArray
         );
 
         //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -96,37 +97,34 @@ public class horario extends AppCompatActivity  {
         imgBtnInserir = (ImageButton) findViewById(R.id.imgBtnInserir);
         imgBtnInserir.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //inserirHorario();
+                inserirHorario();
             }
         });
 
         imgBtnExcluir = (ImageButton) findViewById(R.id.imgBtnExcluir);
         imgBtnExcluir.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //excluirHorario();
+                excluirHorario(horario, horarios);
             }
         });
 
-        produtos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        horarios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id){
-                cursor = (Cursor) horario.getSelectedItem();
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                cursor = (Cursor) horarios.getSelectedItem();
                 editNomeDisc.setText(cursor.getString
-                (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_NOME_DISCIPLINA)));
+                        (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_NOME_DISCIPLINA)));
                 editHoraFim.setText(cursor.getString
-                (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_HORA_FIM)));
+                        (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_HORA_FIM)));
                 editHoraIni.setText(cursor.getString
-                (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_HORA_INICIO)));
-                String compareValue = (cursor.getString
-                (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_DIA_SEMANA)));
-                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.select_state, android.R.layout.simple_spinner_item);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                mSpinner.setAdapter(adapter);
-                if (compareValue != null) {
-                    int spinnerPosition = adapter.getPosition(compareValue);
-                    mSpinner.setSelection(spinnerPosition);
-                }
+                        (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_HORA_INICIO)));
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     void throwTimeDialog(final int i){
@@ -151,8 +149,8 @@ public class horario extends AppCompatActivity  {
             && !editHoraFim.getText().toString().isEmpty()) {
             String nomeDisc = editNomeDisc.getText().toString();
             String diaSemana = this.dias.getSelectedItem().toString();
-            String horaInicio = this.editHoraIni.getText();
-            String horaFim = this.editHoraFim.getText();
+            String horaInicio = this.editHoraIni.getText().toString();
+            String horaFim = this.editHoraFim.getText().toString();
             resultado = this.horario.insereHorario(nomeDisc, horaInicio, horaFim , diaSemana);
             Toast.makeText(this, nomeDisc + " no dia " + diaSemana + " inserida com sucesso", Toast.LENGTH_SHORT).show();
             editNomeDisc.setText(""); editHoraIni.setText(""); editHoraFim.setText("");

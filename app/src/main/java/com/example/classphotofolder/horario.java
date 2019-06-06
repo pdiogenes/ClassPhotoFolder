@@ -14,6 +14,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,10 +57,9 @@ public class horario extends AppCompatActivity  {
         spinnerArray.add("Sexta");
         spinnerArray.add("Sábado");
         spinnerArray.add("Domingo");
-        Context c = this;
         // (3) create an adapter from the list
-        ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(
-                c ,
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+            getApplicationContext(),
             android.R.layout.simple_spinner_item,
             spinnerArray
         );

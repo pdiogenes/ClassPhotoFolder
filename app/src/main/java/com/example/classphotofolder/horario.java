@@ -4,6 +4,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -165,6 +167,17 @@ public class horario extends AppCompatActivity  {
             Toast.makeText(this, nomeDisc + " no dia " + diaSemana + " inserida com sucesso", Toast.LENGTH_SHORT).show();
             editNomeDisc.setText(""); editHoraIni.setText(""); editHoraFim.setText("");
             preencheAdaptador();
+            File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) +
+                    File.separator + "ClassPhotoFolder/" + nomeDisc);
+            boolean success = true;
+            if (!folder.exists()) {
+                success = folder.mkdirs();
+            }
+            if (success) {
+                // Do something on success
+            } else {
+                // Do something else on failure
+            }
         } else Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show();
 
 

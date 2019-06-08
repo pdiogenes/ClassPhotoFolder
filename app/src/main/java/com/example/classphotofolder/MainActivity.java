@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     Criteria criteria;
     Location currentLocation;
     String bestProvider;
+    AulaHelper aulaHelper;
 
     //BD
     Controller_Horario horario;
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }
         });
 
+        aulaHelper = new AulaHelper(this);
         getAulaAtual();
 
         ImageButton imgBtnCamera = (ImageButton) findViewById(R.id.imgBtnCamera);
@@ -99,58 +101,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     }
 
-    void getAulaAtual(){
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        int horas = calendar.get(Calendar.HOUR_OF_DAY);
-        Log.d("horas ", String.valueOf(horas));
-        int minutos = calendar.get(Calendar.MINUTE);
-        Log.d("minutos ", String.valueOf(minutos));
-        String aux = String.valueOf(horas)+String.valueOf(minutos);
-        long t = Long.parseLong(aux);
-        Log.d("HoraAtualMain", String.valueOf(t));
-        String dayOfWeek = getDia(day);
-        Log.d("dia: ", dayOfWeek);
-        cur = horario.acharHorarioAtual(t, dayOfWeek);
-        if(cur.getCount() > 0){
-            String aula = cur.getString
-                    (cur.getColumnIndexOrThrow(DBHelper.COLUNA_NOME_DISCIPLINA));
-            txtAula.setText("Aula atual: " + aula);
-            possuiAula = true;
-        }
-        else{
-            txtAula.setText("Você não tem nenhuma aula registrada agora.");
-            possuiAula = false;
-        }
-    }
 
-    String getDia(int day){
-        String dia = "";
-        switch (day) {
-            case Calendar.SUNDAY:
-                dia = "Domingo";
-                break;
-            case Calendar.MONDAY:
-                dia = "Segunda";
-                break;
-            case Calendar.TUESDAY:
-                dia = "Terça";
-                break;
-            case Calendar.WEDNESDAY:
-                dia = "Quarta";
-                break;
-            case Calendar.THURSDAY:
-                dia = "Quinta";
-                break;
-            case Calendar.FRIDAY:
-                dia = "Sexta";
-                break;
-            case Calendar.SATURDAY:
-                dia = "Sábado";
-                break;
-        }
-        return dia;
-    }
 
     void getGPSPermission(){
         hasPermissionGPS = (ContextCompat.checkSelfPermission(this,
@@ -162,6 +113,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         }
         else {
             verificarDistancia();
+        }
+    }
+
+    void getAulaAtual(){
+        String aula = aulaHelper.getAulaAtual();
+        if(aula.equals("")){
+            txtAula.setText("Você não tem nenhuma aula registrada agora.");
+            possuiAula = false;
+        }
+        else {
+            txtAula.setText("Aula atual: " + aula);
+            possuiAula = true;
         }
     }
 

@@ -67,7 +67,7 @@ public class camera extends AppCompatActivity {
                         // open dir
                         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                         Uri uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                                + "/ClassPhotoFolder/");
+                                + "/pictures/ClassPhotoFolder/");
                         intent.setDataAndType(uri, "text/csv");
                         startActivity(Intent.createChooser(intent, "Open folder"));
                     }

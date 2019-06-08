@@ -1,6 +1,7 @@
 package com.example.classphotofolder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.icu.text.SimpleDateFormat;
@@ -9,8 +10,11 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.io.File;
@@ -28,6 +32,10 @@ public class camera extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
+        getSupportActionBar().hide(); //hide the title bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN); //show the activity in full screen
         setContentView(R.layout.activity_camera);
 
         // Create an instance of Camera
@@ -39,7 +47,7 @@ public class camera extends AppCompatActivity {
         preview.addView(mPreview);
 
                 // Add a listener to the Capture button
-        Button captureButton = (Button) findViewById(R.id.button_capture);
+        ImageButton captureButton = (ImageButton) findViewById(R.id.button_capture);
         captureButton.setOnClickListener(
             new View.OnClickListener() {
                 @Override
@@ -49,6 +57,21 @@ public class camera extends AppCompatActivity {
                     photoTaken();
                 }
             }
+        );
+
+        ImageButton folderButton = (ImageButton) findViewById(R.id.button_folder);
+        folderButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // open dir
+                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        Uri uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                                + "/ClassPhotoFolder/");
+                        intent.setDataAndType(uri, "text/csv");
+                        startActivity(Intent.createChooser(intent, "Open folder"));
+                    }
+                }
         );
     }
 

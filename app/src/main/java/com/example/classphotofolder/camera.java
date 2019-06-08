@@ -28,6 +28,7 @@ public class camera extends AppCompatActivity {
     private CameraPreview mPreview;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    AulaHelper aulaHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,8 @@ public class camera extends AppCompatActivity {
 
         // Create an instance of Camera
         mCamera = getCameraInstance();
+        aulaHelper = new AulaHelper(this);
+
 
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
@@ -53,8 +56,14 @@ public class camera extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // get an image from the camera
-                    mCamera.takePicture(null, null, mPicture);
-                    photoTaken();
+                    String aula = aulaHelper.getAulaAtual();
+                    if(aula.equals("")){
+                        sendToast();
+                    }
+                    else {
+                      mCamera.takePicture(null, null, mPicture);
+                      photoTaken();
+                    }
                 }
             }
         );
@@ -65,15 +74,22 @@ public class camera extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         // open dir
-                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                        Uri uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                                + "/pictures/ClassPhotoFolder/");
-                        intent.setDataAndType(uri, "text/csv");
-                        startActivity(Intent.createChooser(intent, "Open folder"));
+                        String aula = aulaHelper.getAulaAtual();
+                        if(aula.equals("")){
+                            sendToast();
+                        }
+                        else {
+                          Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                          Uri uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                                  + "/pictures/ClassPhotoFolder/");
+                          intent.setDataAndType(uri, "text/csv");
+                          startActivity(Intent.createChooser(intent, "Open folder"));
+                        }                        
                     }
                 }
         );
-    }
+    } // fim do onCreate
+
 
     private boolean checkCameraHardware(Context context) {
         if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
@@ -81,6 +97,10 @@ public class camera extends AppCompatActivity {
         } else {
             return false;
         }
+    }
+
+    void sendToast(){
+        Toast.makeText(this, "Você não tem nenhuma aula registrada agora!", Toast.LENGTH_SHORT).show();
     }
 
     void photoTaken(){
@@ -103,8 +123,8 @@ public class camera extends AppCompatActivity {
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-
-            File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
+            String disciplina = aulaHelper.getAulaAtual();
+            File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE,disciplina);
             if (pictureFile == null){
                 Toast.makeText(getApplicationContext(), "Error creating media file, check storage permissions", Toast.LENGTH_LONG).show();
                 return;
@@ -124,16 +144,15 @@ public class camera extends AppCompatActivity {
 
 
 /** Create a file Uri for saving an image or video */
-    private static Uri getOutputMediaFileUri(int type){
-          return Uri.fromFile(getOutputMediaFile(type));
+    private static Uri getOutputMediaFileUri(int type , String disciplina){
+          return Uri.fromFile(getOutputMediaFile(type , disciplina));
     }
 
     /** Create a File for saving an image or video */
-    private static File getOutputMediaFile(int type){
+    private static File getOutputMediaFile(int type, String disciplina){
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
-        String disciplina = "";
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "ClassPhotoFolder/"+disciplina);;
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "ClassPhotoFolder/"+disciplina);
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 

@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         });
 
         aulaHelper = new AulaHelper(this);
-        getAulaAtual();
+        setTextAula();
 
         ImageButton imgBtnCamera = (ImageButton) findViewById(R.id.imgBtnCamera);
         imgBtnCamera.setOnClickListener(new View.OnClickListener() {
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         }
     }
 
-    void getAulaAtual(){
+    void setTextAula(){
         String aula = aulaHelper.getAulaAtual();
         if(aula.equals("")){
             txtAula.setText("Você não tem nenhuma aula registrada agora.");
@@ -301,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onResume() {
         super.onResume();
         verificarDistancia();
-        getAulaAtual();
+        setTextAula();
     }
 
     @Override

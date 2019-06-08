@@ -124,10 +124,6 @@ public class horario extends AppCompatActivity  {
                 cursor = (Cursor) horarios.getSelectedItem();
                 editNomeDisc.setText(cursor.getString
                         (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_NOME_DISCIPLINA)));
-                editHoraFim.setText(cursor.getString
-                        (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_HORA_FIM_STRING)));
-                editHoraIni.setText(cursor.getString
-                        (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_HORA_INICIO_STRING)));
             }
 
             @Override
@@ -182,6 +178,8 @@ public class horario extends AppCompatActivity  {
             preencheAdaptador();
             File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) +
                     File.separator + "ClassPhotoFolder/" + nomeDisc);
+            editHoraFim.setText("");
+            editHoraIni.setText("");
             boolean success = true;
             if (!folder.exists()) {
                 success = folder.mkdirs();
@@ -202,6 +200,8 @@ public class horario extends AppCompatActivity  {
         cursor = (Cursor) horarios.getSelectedItem();
         horario.apagaRegistro(cursor.getInt(0));
         preencheAdaptador();
+        editHoraFim.setText("");
+        editHoraIni.setText("");
     }
 
     public void preencheAdaptador() {

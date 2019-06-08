@@ -120,10 +120,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         String aula = aulaHelper.getAulaAtual();
         if(aula.equals("")){
             txtAula.setText("Você não tem nenhuma aula registrada agora.");
+            Log.e("tag", "xd");
             possuiAula = false;
         }
         else {
             txtAula.setText("Aula atual: " + aula);
+            Log.e("tag", "xd");
             possuiAula = true;
         }
     }

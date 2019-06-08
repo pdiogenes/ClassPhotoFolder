@@ -132,8 +132,8 @@ public class camera extends AppCompatActivity {
     private static File getOutputMediaFile(int type){
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
-
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "ClassPhotoFolder");;
+        String disciplina = "";
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "ClassPhotoFolder/"+disciplina);;
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 

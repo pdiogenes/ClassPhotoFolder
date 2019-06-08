@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static android.app.PendingIntent.getActivity;
@@ -36,6 +37,8 @@ public class horario extends AppCompatActivity  {
     private static final int horaInicio = 2;
     TimePickerDialog timePickerDialog;
     EditText editNomeDisc, editHoraIni, editHoraFim;
+    Calendar hrInicio;
+    Calendar hrFim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +113,9 @@ public class horario extends AppCompatActivity  {
             }
         });
 
+        hrInicio = Calendar.getInstance();
+        hrFim = Calendar.getInstance();
+
         horarios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -117,9 +123,9 @@ public class horario extends AppCompatActivity  {
                 editNomeDisc.setText(cursor.getString
                         (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_NOME_DISCIPLINA)));
                 editHoraFim.setText(cursor.getString
-                        (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_HORA_FIM)));
+                        (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_HORA_FIM_STRING)));
                 editHoraIni.setText(cursor.getString
-                        (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_HORA_INICIO)));
+                        (cursor.getColumnIndexOrThrow(DBHelper.COLUNA_HORA_INICIO_STRING)));
             }
 
             @Override
@@ -145,9 +151,11 @@ public class horario extends AppCompatActivity  {
 
                 if(i == horaInicio){
                     editHoraIni.setText(horas + ":" + minutos);
+                    hrInicio.set(0, 0, 0, hourOfDay, minutes, 0);
                 }
                 else if(i == horaFim){
                     editHoraFim.setText(horas + ":" + minutos);
+                    hrFim.set(0, 0, 0, hourOfDay, minutes, 0);
                 }
             }
         }, 0, 0, false);
@@ -159,11 +167,16 @@ public class horario extends AppCompatActivity  {
         String resultado;
         if (!editNomeDisc.getText().toString().isEmpty() && !editHoraIni.getText().toString().isEmpty()
             && !editHoraFim.getText().toString().isEmpty()) {
+
+
+
+            long ini = hrInicio.getTimeInMillis();
+            long fim = hrFim.getTimeInMillis();
             String nomeDisc = editNomeDisc.getText().toString();
             String diaSemana = this.dias.getSelectedItem().toString();
             String horaInicio = this.editHoraIni.getText().toString();
             String horaFim = this.editHoraFim.getText().toString();
-            resultado = this.horario.insereHorario(nomeDisc, horaInicio, horaFim , diaSemana);
+            resultado = this.horario.insereHorario(nomeDisc, ini, fim, horaInicio, horaFim, diaSemana);
             Toast.makeText(this, nomeDisc + " no dia " + diaSemana + " inserida com sucesso", Toast.LENGTH_SHORT).show();
             editNomeDisc.setText(""); editHoraIni.setText(""); editHoraFim.setText("");
             preencheAdaptador();
@@ -194,7 +207,7 @@ public class horario extends AppCompatActivity  {
     public void preencheAdaptador() {
         this.horario = new Controller_Horario(this);
         this.cursor = horario.preencheSpinner();
-        this.nomeCampos = new String[]{DBHelper.COLUNA_NOME_DISCIPLINA, DBHelper.COLUNA_DIA_SEMANA, DBHelper.COLUNA_HORA_INICIO, DBHelper.COLUNA_HORA_FIM};
+        this.nomeCampos = new String[]{DBHelper.COLUNA_NOME_DISCIPLINA, DBHelper.COLUNA_DIA_SEMANA, DBHelper.COLUNA_HORA_INICIO_STRING, DBHelper.COLUNA_HORA_FIM_STRING};
         this.idViews = new int[]{R.id.txtNomeDisciplina, R.id.txtDiaSemana, R.id.txtHoraInicio, R.id.txtHoraFim};
         SimpleCursorAdapter adaptador = new SimpleCursorAdapter(this, R.layout.spinner_horarios, this.cursor, this.nomeCampos, this.idViews, 0);
         horarios.setAdapter(adaptador);

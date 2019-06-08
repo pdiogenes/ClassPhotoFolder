@@ -16,7 +16,7 @@ public class Controller_Horario {
     }
 
 
-    public String insereHorario(String nomeDisciplina, String horaInicio, String horaFim, String diaSemana){
+    public String insereHorario(String nomeDisciplina, long horaInicio, long horaFim, String hrInicio, String hrFim, String diaSemana){
         ContentValues valores;
         long resultado;
         db = banco.getWritableDatabase();
@@ -24,6 +24,8 @@ public class Controller_Horario {
         valores.put(DBHelper.COLUNA_NOME_DISCIPLINA, nomeDisciplina);
         valores.put(DBHelper.COLUNA_HORA_INICIO , horaInicio);
         valores.put(DBHelper.COLUNA_HORA_FIM, horaFim);
+        valores.put(DBHelper.COLUNA_HORA_INICIO_STRING , hrInicio);
+        valores.put(DBHelper.COLUNA_HORA_FIM_STRING, hrFim);
         valores.put(DBHelper.COLUNA_DIA_SEMANA, diaSemana);
         resultado = db.insert(DBHelper.NOME_TABELA_AULAS, null, valores);
         db.close();
@@ -31,7 +33,7 @@ public class Controller_Horario {
         else return "Registro Inserido com sucesso";
     }
 
-    public void alteraRegistro(int id , String nomeDisciplina, String horaInicio, String horaFim, String diaSemana){
+    public void alteraRegistro(int id , String nomeDisciplina, long horaInicio, long horaFim, String hrInicio, String hrFim, String diaSemana){
         ContentValues valores; String where;
         db = banco.getWritableDatabase();
         where = DBHelper.COLUNA_AULA_ID + "=" + id;
@@ -39,6 +41,8 @@ public class Controller_Horario {
         valores.put(DBHelper.COLUNA_NOME_DISCIPLINA, nomeDisciplina);
         valores.put(DBHelper.COLUNA_HORA_INICIO , horaInicio);
         valores.put(DBHelper.COLUNA_HORA_FIM, horaFim);
+        valores.put(DBHelper.COLUNA_HORA_INICIO_STRING , hrInicio);
+        valores.put(DBHelper.COLUNA_HORA_FIM_STRING, hrFim);
         valores.put(DBHelper.COLUNA_DIA_SEMANA, diaSemana);
         db.update(DBHelper.NOME_TABELA_AULAS,valores,where,null);
         db.close();
@@ -54,7 +58,7 @@ public class Controller_Horario {
     public Cursor preencheSpinner(){
         Cursor cursor;
         String[] campos = new String[]{banco.COLUNA_AULA_ID, banco.COLUNA_NOME_DISCIPLINA,
-        banco.COLUNA_HORA_INICIO, banco.COLUNA_HORA_FIM, banco.COLUNA_DIA_SEMANA};
+        banco.COLUNA_HORA_INICIO_STRING, banco.COLUNA_HORA_FIM_STRING, banco.COLUNA_DIA_SEMANA};
         db = banco.getReadableDatabase();
         cursor = db.query(banco.NOME_TABELA_AULAS, campos, null, null, null, null,
         banco.COLUNA_NOME_DISCIPLINA+" ASC", null);
@@ -68,13 +72,27 @@ public class Controller_Horario {
     public Cursor carregaRegistroUnico(int id){
         Cursor cursor;
         String[] campos = {banco.COLUNA_AULA_ID, banco.COLUNA_NOME_DISCIPLINA,
-        banco.COLUNA_HORA_INICIO, banco.COLUNA_HORA_FIM, banco.COLUNA_DIA_SEMANA};
+        banco.COLUNA_HORA_INICIO_STRING, banco.COLUNA_HORA_FIM_STRING, banco.COLUNA_DIA_SEMANA};
         String where = DBHelper.COLUNA_AULA_ID + "=" + id;
         db = banco.getReadableDatabase();
         cursor = db.query(DBHelper.NOME_TABELA_AULAS,campos,where,
         null, null, null, null, null);
         if(cursor!=null){
         cursor.moveToFirst(); }
+        db.close();
+        return cursor;
+    }
+
+    public Cursor acharHorarioAtual(long horario){
+        Cursor cursor;
+        String[] campos = {banco.COLUNA_AULA_ID, banco.COLUNA_NOME_DISCIPLINA,
+                banco.COLUNA_HORA_INICIO_STRING, banco.COLUNA_HORA_FIM_STRING, banco.COLUNA_DIA_SEMANA};
+        String where = horario + "between " + DBHelper.COLUNA_HORA_INICIO + " and " + DBHelper.COLUNA_HORA_FIM;
+        db = banco.getReadableDatabase();
+        cursor = db.query(DBHelper.NOME_TABELA_AULAS,campos,where,
+                null, null, null, null, null);
+        if(cursor!=null){
+            cursor.moveToFirst(); }
         db.close();
         return cursor;
     }

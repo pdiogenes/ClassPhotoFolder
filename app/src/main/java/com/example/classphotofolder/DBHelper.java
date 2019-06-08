@@ -6,12 +6,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
     protected static final String NOME_BANCO = "horario.db";
-    protected static final int VERSAO_BANCO = 1;
+    protected static final int VERSAO_BANCO = 2;
     protected final static String NOME_TABELA_AULAS = "Aula";
     protected final static String COLUNA_AULA_ID = "_id";
     protected final static String COLUNA_NOME_DISCIPLINA = "NomeDisciplina";
     protected final static String COLUNA_HORA_INICIO = "HoraInicio";
+    protected final static String COLUNA_HORA_INICIO_STRING = "HoraInicioString";
     protected final static String COLUNA_HORA_FIM = "HoraFim";
+    protected final static String COLUNA_HORA_FIM_STRING = "HoraFimString";
     protected final static String COLUNA_DIA_SEMANA = "DiaSemana";
 
     public DBHelper(Context context) {
@@ -24,8 +26,10 @@ public class DBHelper extends SQLiteOpenHelper {
         NOME_TABELA_AULAS + "(" +
         COLUNA_AULA_ID + " INTEGER PRIMARY KEY," +
         COLUNA_NOME_DISCIPLINA + " TEXT," +
-        COLUNA_HORA_INICIO + " DATETIME," +
-        COLUNA_HORA_FIM + " DATETIME," +
+        COLUNA_HORA_INICIO + " LONG," +
+        COLUNA_HORA_FIM + " LONG," +
+        COLUNA_HORA_INICIO_STRING + " TEXT," +
+        COLUNA_HORA_FIM_STRING + " TEXT," +
         COLUNA_DIA_SEMANA + " TEXT" +
         ")";
         db.execSQL(CRIA_TABELA_AULAS);

@@ -5,6 +5,10 @@ public class Model_Horario {
     private String nomeDisciplina;
     private Long horaInicio;
     private Long horaFim;
+    private String horaMostrarInicio;
+
+
+    private String horaMostrarFim;
     private String diaSemana;
 
     public int getIdAula() {
@@ -46,4 +50,21 @@ public class Model_Horario {
     public void setDiaSemana(String diaSemana) {
         this.diaSemana = diaSemana;
     }
+
+    public String getHoraMostrarInicio() {
+        return horaMostrarInicio;
+    }
+
+    public void setHoraMostrarInicio(String horaMostrarInicio) {
+        this.horaMostrarInicio = horaMostrarInicio;
+    }
+
+    public String getHoraMostrarFim() {
+        return horaMostrarFim;
+    }
+
+    public void setHoraMostrarFim(String horaMostrarFim) {
+        this.horaMostrarFim = horaMostrarFim;
+    }
+
 }

@@ -58,7 +58,7 @@ public class Controller_Horario {
     public Cursor preencheSpinner(){
         Cursor cursor;
         String[] campos = new String[]{banco.COLUNA_AULA_ID, banco.COLUNA_NOME_DISCIPLINA,
-        banco.COLUNA_HORA_INICIO_STRING, banco.COLUNA_HORA_FIM_STRING, banco.COLUNA_DIA_SEMANA};
+        banco.COLUNA_HORA_INICIO_STRING, banco.COLUNA_HORA_FIM_STRING, banco.COLUNA_DIA_SEMANA, banco.COLUNA_HORA_INICIO, banco.COLUNA_HORA_FIM};
         db = banco.getReadableDatabase();
         cursor = db.query(banco.NOME_TABELA_AULAS, campos, null, null, null, null,
         banco.COLUNA_NOME_DISCIPLINA+" ASC", null);
@@ -83,11 +83,11 @@ public class Controller_Horario {
         return cursor;
     }
 
-    public Cursor acharHorarioAtual(long horario){
+    public Cursor acharHorarioAtual(long horario, String dia){
         Cursor cursor;
         String[] campos = {banco.COLUNA_AULA_ID, banco.COLUNA_NOME_DISCIPLINA,
                 banco.COLUNA_HORA_INICIO_STRING, banco.COLUNA_HORA_FIM_STRING, banco.COLUNA_DIA_SEMANA};
-        String where = horario + "between " + DBHelper.COLUNA_HORA_INICIO + " and " + DBHelper.COLUNA_HORA_FIM;
+        String where = horario + " between " + DBHelper.COLUNA_HORA_INICIO + " and " + DBHelper.COLUNA_HORA_FIM + " and " + DBHelper.COLUNA_DIA_SEMANA + " = '" + dia + "'";
         db = banco.getReadableDatabase();
         cursor = db.query(DBHelper.NOME_TABELA_AULAS,campos,where,
                 null, null, null, null, null);

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.Calendar;
 
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private static final int REQUEST_CAMERA = 2;
     private static final int REQUEST_FINE_LOCATION = 3;
     TextView txtDist;
+    TextView txtAula;
     AppLocationService appLocationService;
     LocationManager locationManager;
     SharedPreferences sp;
@@ -46,6 +49,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     Location currentLocation;
     String bestProvider;
 
+    //BD
+    Controller_Horario horario;
+    Cursor cur;
+    boolean possuiAula;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +60,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         setContentView(R.layout.activity_main);
 
         sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        horario = new Controller_Horario(getApplicationContext());
 
         txtDist = (TextView) findViewById(R.id.textCompDist);
         txtDist.setText("");
+        txtAula = (TextView) findViewById(R.id.txtAulaAtual);
+        txtAula.setText("");
+
         getGPSPermission();
 
         appLocationService = new AppLocationService(
@@ -76,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }
         });
 
+        getAulaAtual();
 
         ImageButton imgBtnCamera = (ImageButton) findViewById(R.id.imgBtnCamera);
         imgBtnCamera.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +97,59 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }
         });
 
+    }
+
+    void getAulaAtual(){
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        int horas = calendar.get(Calendar.HOUR_OF_DAY);
+        Log.d("horas ", String.valueOf(horas));
+        int minutos = calendar.get(Calendar.MINUTE);
+        Log.d("minutos ", String.valueOf(minutos));
+        String aux = String.valueOf(horas)+String.valueOf(minutos);
+        long t = Long.parseLong(aux);
+        Log.d("HoraAtualMain", String.valueOf(t));
+        String dayOfWeek = getDia(day);
+        Log.d("dia: ", dayOfWeek);
+        cur = horario.acharHorarioAtual(t, dayOfWeek);
+        if(cur.getCount() > 0){
+            String aula = cur.getString
+                    (cur.getColumnIndexOrThrow(DBHelper.COLUNA_NOME_DISCIPLINA));
+            txtAula.setText("Aula atual: " + aula);
+            possuiAula = true;
+        }
+        else{
+            txtAula.setText("Você não tem nenhuma aula registrada agora.");
+            possuiAula = false;
+        }
+    }
+
+    String getDia(int day){
+        String dia = "";
+        switch (day) {
+            case Calendar.SUNDAY:
+                dia = "Domingo";
+                break;
+            case Calendar.MONDAY:
+                dia = "Segunda";
+                break;
+            case Calendar.TUESDAY:
+                dia = "Terça";
+                break;
+            case Calendar.WEDNESDAY:
+                dia = "Quarta";
+                break;
+            case Calendar.THURSDAY:
+                dia = "Quinta";
+                break;
+            case Calendar.FRIDAY:
+                dia = "Sexta";
+                break;
+            case Calendar.SATURDAY:
+                dia = "Sábado";
+                break;
+        }
+        return dia;
     }
 
     void getGPSPermission(){
@@ -273,6 +338,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onResume() {
         super.onResume();
         verificarDistancia();
+        getAulaAtual();
     }
 
     @Override

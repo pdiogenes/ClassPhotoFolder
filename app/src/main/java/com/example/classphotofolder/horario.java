@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -37,8 +38,10 @@ public class horario extends AppCompatActivity  {
     private static final int horaInicio = 2;
     TimePickerDialog timePickerDialog;
     EditText editNomeDisc, editHoraIni, editHoraFim;
-    Calendar hrInicio;
-    Calendar hrFim;
+
+    //teste
+    long ini = 0;
+    long fi = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,8 +116,7 @@ public class horario extends AppCompatActivity  {
             }
         });
 
-        hrInicio = Calendar.getInstance();
-        hrFim = Calendar.getInstance();
+
 
         horarios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -147,18 +149,21 @@ public class horario extends AppCompatActivity  {
 
                 if(hourOfDay < 10){
                     horas = "0"+hourOfDay;
-                } else horas = ""+hourOfDay;
+                }
+                else horas = ""+hourOfDay;
 
                 if(i == horaInicio){
                     editHoraIni.setText(horas + ":" + minutos);
-                    hrInicio.set(0, 0, 0, hourOfDay, minutes, 0);
+                    String aux = horas+minutos;
+                    ini = Long.parseLong(aux);
                 }
                 else if(i == horaFim){
                     editHoraFim.setText(horas + ":" + minutos);
-                    hrFim.set(0, 0, 0, hourOfDay, minutes, 0);
+                    String aux = horas+minutos;
+                    fi = Long.parseLong(aux);
                 }
             }
-        }, 0, 0, false);
+        }, 0, 0, true);
         timePickerDialog.show();
     }
 
@@ -167,16 +172,11 @@ public class horario extends AppCompatActivity  {
         String resultado;
         if (!editNomeDisc.getText().toString().isEmpty() && !editHoraIni.getText().toString().isEmpty()
             && !editHoraFim.getText().toString().isEmpty()) {
-
-
-
-            long ini = hrInicio.getTimeInMillis();
-            long fim = hrFim.getTimeInMillis();
             String nomeDisc = editNomeDisc.getText().toString();
             String diaSemana = this.dias.getSelectedItem().toString();
             String horaInicio = this.editHoraIni.getText().toString();
             String horaFim = this.editHoraFim.getText().toString();
-            resultado = this.horario.insereHorario(nomeDisc, ini, fim, horaInicio, horaFim, diaSemana);
+            resultado = this.horario.insereHorario(nomeDisc, ini, fi, horaInicio, horaFim, diaSemana);
             Toast.makeText(this, nomeDisc + " no dia " + diaSemana + " inserida com sucesso", Toast.LENGTH_SHORT).show();
             editNomeDisc.setText(""); editHoraIni.setText(""); editHoraFim.setText("");
             preencheAdaptador();

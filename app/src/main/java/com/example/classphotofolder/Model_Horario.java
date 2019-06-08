@@ -6,8 +6,6 @@ public class Model_Horario {
     private Long horaInicio;
     private Long horaFim;
     private String horaMostrarInicio;
-
-
     private String horaMostrarFim;
     private String diaSemana;
 

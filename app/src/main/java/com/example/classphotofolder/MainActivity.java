@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     boolean hasPermissionCamera;
     boolean hasPermissionGPS;
     boolean hasPermissionStorage;
-    boolean hasPermissionCalendar;
     Criteria criteria;
     Location currentLocation;
     String bestProvider;
@@ -81,7 +80,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         ImageButton imgBtnCamera = (ImageButton) findViewById(R.id.imgBtnCamera);
         imgBtnCamera.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                checkPermissionStorage();
+                Intent intent = new Intent(getApplicationContext(), camera.class);
+                startActivity(intent);
             }
         });
 
@@ -227,10 +227,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         if (!f.exists()) {
             f.mkdir();
         }
-        else{
-            Intent intent = new Intent(getApplicationContext(), camera.class);
-            startActivity(intent);
-        }
 
     }
 
@@ -265,6 +261,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     verificarDistancia();
+                    checkPermissionStorage();
                 } else {
                 }
                 return;

@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -26,9 +28,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.File;
-import java.util.Calendar;
 
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
@@ -49,6 +49,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     Location currentLocation;
     String bestProvider;
     AulaHelper aulaHelper;
+
+    //acelerometro
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private ShakeDetector shakeDetector;
 
     //BD
     Controller_Horario horario;
@@ -94,8 +99,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         ImageButton imgBtnCamera = (ImageButton) findViewById(R.id.imgBtnCamera);
         imgBtnCamera.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), camera.class);
-                startActivity(intent);
+                openCamera();
+            }
+        });
+
+        // inicialização do acelerometro
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = sensorManager
+                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        shakeDetector = new ShakeDetector();
+        shakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+
+            @Override
+            public void onShake(int count) {
+                openCamera(count);
             }
         });
 
@@ -186,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             Double lat = Double.parseDouble(sp.getString("LOCATION_LAT", null));
             Double lon = Double.parseDouble(sp.getString("LOCATION_LON", null));
 
-            if(distance(latitudeLocal, longitudeLocal, lat, lon) < 0.6){
+            if(distance(latitudeLocal, longitudeLocal, lat, lon) < 1){
                 txtDist.setVisibility(View.VISIBLE);
                 txtDist.setText("Você está no local de estudo registrado!");
                 localEstudo = true;
@@ -260,6 +277,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     }
 
+    void openCamera(){
+        Intent intent = new Intent(getApplicationContext(), camera.class);
+        startActivity(intent);
+    }
+
+    void openCamera(int count){
+        Intent intent = new Intent(getApplicationContext(), camera.class);
+        startActivity(intent);
+    }
+
     void openHorarios(){
         Intent intent = new Intent(getApplicationContext(), horario.class);
         startActivity(intent);
@@ -304,6 +331,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         super.onResume();
         verificarDistancia();
         setTextAula();
+        sensorManager.registerListener(shakeDetector, accelerometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    protected void onPause(){
+        sensorManager.unregisterListener(shakeDetector);
+        super.onPause();
     }
 
     @Override

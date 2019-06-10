@@ -1,13 +1,10 @@
 package com.example.classphotofolder;
 
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,16 +12,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import static android.app.PendingIntent.getActivity;
 
 public class horario extends AppCompatActivity  {
 

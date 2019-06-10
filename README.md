@@ -7,9 +7,10 @@ ClassPhotoFolder é um app criado como projeto final da disciplina de Desenvolvi
 - [x] Armazenamento de localização
 - [x] Camera
 - [x] Criação do quadro de horários
-- [x] Criação das pastas baseadas no quadro de horários
-- [ ] Detecção do horário de estudo atual
-- [ ] Salvar fotos na pasta relevante ao horario
-- [ ] Botão "abrir pasta"
+- [x] Criação das pastas baseadas no quadro de horários  
+- [x] Detecção do horário de estudo atual  
+- [x] Salvar fotos na pasta relevante ao horario 
+- [x] Acelerometro para abrir camera 
+- [x] Botão "abrir pasta"
 - [ ] ImageView
 - [ ] Notificações

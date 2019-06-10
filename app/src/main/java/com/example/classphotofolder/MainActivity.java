@@ -13,6 +13,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -103,6 +104,34 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }
         });
 
+        ImageButton folderButton = (ImageButton) findViewById(R.id.button_folder);
+        folderButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // open dir
+                        String aula = aulaHelper.getAulaAtual();
+                        if(aula.equals("")){
+                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                            String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                                    + File.separator + "ClassPhotoFolder";
+                            Uri uri = Uri.parse(path);
+                            intent.setDataAndType(uri, "text/csv");
+                            startActivity(Intent.createChooser(intent, "Open folder"));
+                        }
+                        else {
+                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                            String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                                    + File.separator + "/ClassPhotoFolder/"+aula;
+                            Uri uri = Uri.parse(path);
+                            intent.setDataAndType(uri, "text/csv");
+                            startActivity(Intent.createChooser(intent, "Open folder"));
+                        }
+                    }
+                }
+        );
+
+
         // inicialização do acelerometro
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager
@@ -116,8 +145,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }
         });
 
-    }
-
+    } // fim do onCreate
 
 
     void getGPSPermission(){

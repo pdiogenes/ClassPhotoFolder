@@ -78,9 +78,10 @@ public class camera extends AppCompatActivity {
                             sendToast();
                         }
                         else {
+                          sendToast(aula);
                           Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                           Uri uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                                  + "/pictures/ClassPhotoFolder/"+aula);
+                                  + File.separator + "ClassPhotoFolder/"+aula);
                           intent.setDataAndType(uri, "text/csv");
                           startActivity(Intent.createChooser(intent, "Open folder"));
                         }
@@ -100,6 +101,10 @@ public class camera extends AppCompatActivity {
 
     void sendToast(){
         Toast.makeText(this, "Você não tem nenhuma aula registrada agora!", Toast.LENGTH_SHORT).show();
+    }
+
+    void sendToast(String aula){
+        Toast.makeText(this, "Você está na aula "+aula, Toast.LENGTH_SHORT).show();
     }
 
     void photoTaken(){

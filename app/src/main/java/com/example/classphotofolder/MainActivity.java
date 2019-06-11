@@ -209,7 +209,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 Log.e("TAG", "GPS is on");
                 double latitude = currentLocation.getLatitude();
                 double longitude = currentLocation.getLongitude();
-                Toast.makeText(MainActivity.this, "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
             }
             else{
                 //This is what you need:
